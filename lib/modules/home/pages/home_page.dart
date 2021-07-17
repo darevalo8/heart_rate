@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:heart_rate/src/widgets/curve_painter.dart';
+import 'package:heart_rate/modules/history/page/history_page.dart';
+import 'package:heart_rate/modules/home/pages/base_home.dart';
+import 'package:heart_rate/modules/user/pages/profile_page.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,14 +13,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+  static const List<Widget> _widgetOptions = [
+    BaseHome(),
+    HistoryPage(),
+    ProfilePage()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,13 +32,15 @@ class _HomePageState extends State<HomePage> {
           BottomNavyBarItem(
             icon: Icon(Icons.home,),
             title: Text('Home'),
-            activeColor: Colors.red,
+            activeColor: Colors.blueAccent,
+            inactiveColor: Colors.grey,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.history),
             title: Text('Alertas'),
-            activeColor: Colors.red,
+            activeColor: Colors.blueAccent,
+            inactiveColor: Colors.grey,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
@@ -47,8 +48,9 @@ class _HomePageState extends State<HomePage> {
             title: Text(
               'Perfil',
             ),
-            activeColor: Colors.red,
+            activeColor: Colors.blueAccent,
             textAlign: TextAlign.center,
+            inactiveColor: Colors.grey,
           ),
           // BottomNavyBarItem(
           //   icon: Icon(Icons.settings),
@@ -58,51 +60,8 @@ class _HomePageState extends State<HomePage> {
           // ),
         ],
       ),
-      body: SafeArea(
-        child: Column(
-          verticalDirection: VerticalDirection.up,
-          children: [_backgroundInfo()],
-        ),
-      ),
+      body: _widgetOptions[_currentIndex],
       
-    );
-  }
-
-  Widget _backgroundInfo() {
-    return Container(
-      
-      width: double.infinity,
-      height: 400,
-      child: CustomPaint(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '112',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 110,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              'rpm',
-              style: TextStyle(
-                color: Colors.white30,
-                fontSize: 60,
-                // fontWeight: FontWeight.w100,
-              ),
-            )
-          ],
-        ),
-        painter: CurvePainter(),
-      ),
-      // decoration: BoxDecoration(
-      //   color: Colors.redAccent,
-      //   borderRadius: BorderRadius.vertical(
-      //     top: Radius.elliptical(200, 100)
-      //   )
-      // ),
     );
   }
 }

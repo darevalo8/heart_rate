@@ -13,12 +13,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-
   cupertino_icons: ^1.0.2
   http: ^0.13.3
   flutter_web_auth: ^0.3.0
   bottom_navy_bar: ^6.0.0
+  shared_preferences: ^2.0.6
+  bloc: ^7.0.0
+  flutter_bloc: ^7.0.1
 
 dev_dependencies:
   flutter_test:

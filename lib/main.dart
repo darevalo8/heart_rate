@@ -1,22 +1,37 @@
+import 'dart:developer';
+
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:heart_rate/src/pages/home_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heart_rate/src/app_bloc_observer.dart';
+import 'package:heart_rate/src/dependencies.dart';
 
+import 'package:heart_rate/modules/auth/pages/login_page.dart';
+import 'package:heart_rate/src/shared_preferences/config_app_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final configPrefs = ConfigAppPreferences();
+  await configPrefs.initPrefs();
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
+  Bloc.observer = AppBlocObserver();
+  FlutterError.onError = (details) {
+    log(details.exceptionAsString(), stackTrace: details.stack);
+  };
+  runApp(MyApp());
 }
 
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'HeartRate',
-      home: HomePage(),
-      theme: ThemeData(fontFamily: 'Poppins'),
-      
+    return MultiRepositoryProvider(
+      providers: buildRepositories(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'HeartRate',
+        home: LoginPage(),
+        theme: ThemeData(fontFamily: 'Poppins'),
+      ),
     );
   }
 }
