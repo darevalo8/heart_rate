@@ -1,38 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heart_rate/modules/user/blocs/user_cubit.dart';
+import 'package:heart_rate/src/common/api_fetch.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(height: 40.0,),
-            Center(child: _AvatarImageBox()),
-            Center(
-              child: Text(
-                'Daniel Arévalo',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, state) {
+        if (state is UserInitial) {
+          context.read<UserCubit>().getProfile();
+        } else if ((state as UserStatus).status == Status.LOADING) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if ((state).status == Status.ERROR) {
+          return Container(
+            child: Center(
+              child: Text(state.message!),
+            ),
+          );
+        } else if ((state).status == Status.COMPLETED) {
+          return Scaffold(
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    Center(
+                      child: _AvatarImageBox(avatar: state.data!.avatar150.toString(),),
+                    ),
+                    Center(
+                      child: Text(
+                        '${state.data!.fullName}',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60.0,
+                    ),
+                    _listBody(
+                        'Fecha de nacimiento', '${state.data!.dateOfBirth}'),
+                    Divider(),
+                    _listBody('Edad', state.data!.age.toString()),
+                    Divider(),
+                    _listBody('Genero', state.data!.gender.toString()),
+                    Divider(),
+                    _listBody('Estatura', '${state.data!.height} cm'),
+                    Divider(),
+                    _listBody('Peso', '${state.data!.weight}kg'),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 60.0,),
-            _listBody('Edad', '26'),
-            Divider(),
-            _listBody('Genero', 'Masculino'),
-            Divider(),
-            _listBody('Estatura', '1.80 cm'),
-            Divider(),
-            _listBody('Peso', '60kg'),
-          ],
-        ),
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
@@ -42,7 +74,6 @@ class ProfilePage extends StatelessWidget {
       // margin: EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
       child: Column(
-        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -56,7 +87,6 @@ class ProfilePage extends StatelessWidget {
           Text(
             '$subTile',
             style: TextStyle(
-              
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -65,19 +95,12 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-  // Widget _profileImage() {
-  //   return Container(
-  //     height: 400,
-  //     width: 400,
-  //     decoration: BoxDecoration(
-  //       image:
-  //     ),
-  //   );
-  // }
 }
 
+// ignore: must_be_immutable
 class _AvatarImageBox extends StatelessWidget {
-  const _AvatarImageBox({Key? key}) : super(key: key);
+  String avatar;
+  _AvatarImageBox({Key? key, required this.avatar}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +117,7 @@ class _AvatarImageBox extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/mi-cameo.appspot.com/o/avatars%2Fno-avatar.png?alt=media&token=1e70e97a-7a29-498d-9e00-819804af693a',
+              this.avatar,
               fit: BoxFit.fill,
             ),
           ),

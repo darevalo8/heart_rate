@@ -19,13 +19,14 @@ class ButtomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final elevatedButtonStyle = ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 60, vertical: 14),
-      shadowColor: Colors.blueAccent,
+        
+        primary: this.color,
+        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 14),
+        shadowColor: this.color,
         elevation: 10,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))));
     return ElevatedButton(
-      
       onPressed: this.onPressed,
       child: Text(
         this.text,

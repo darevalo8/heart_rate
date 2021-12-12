@@ -4,7 +4,6 @@ import 'package:heart_rate/modules/auth/blocs/login_cubit.dart';
 import 'package:heart_rate/modules/home/pages/home_page.dart';
 import 'package:heart_rate/src/common/api_fetch.dart';
 import 'package:heart_rate/src/common/navigation_methods.dart';
-import 'package:heart_rate/src/shared_preferences/config_app_preferences.dart';
 import 'package:heart_rate/src/widgets/buttom_widget.dart';
 
 class LoginPage extends StatelessWidget {
@@ -36,7 +35,7 @@ class LoginPage extends StatelessWidget {
               }
             case Status.COMPLETED:
               {
-                pushAndReplaceTopage(context, HomePage());
+                pushAndReplaceTopage(context, RunHome());
                 break;
               }
             default:
@@ -76,6 +75,7 @@ class LoginPage extends StatelessWidget {
                       onPressed: () {
                         context.read<LoginCubit>().login();
                       },
+                      color: Colors.blueAccent,
                       text: "Enlaza tu Reloj",
                     ),
                     SizedBox(

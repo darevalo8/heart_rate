@@ -5,12 +5,15 @@ abstract class HomeState {}
 
 class HomeInitial extends HomeState {}
 
-class LoginLoading extends HomeState {
+// ignore: must_be_immutable
+class HomeStatus extends HomeState {
   Status status;
   dynamic data;
   String? message;
+  String? pyload;
 
-  LoginLoading.loading() : status = Status.LOADING;
-  LoginLoading.completed(this.data) : status = Status.COMPLETED;
-  LoginLoading.error(this.message) : status = Status.ERROR;
+  HomeStatus.loading() : status = Status.LOADING;
+  HomeStatus.completed(this.data) : status = Status.COMPLETED;
+  HomeStatus.error(this.message) : status = Status.ERROR;
+  HomeStatus.notification(this.pyload): status = Status.NOTIFICATION;
 }

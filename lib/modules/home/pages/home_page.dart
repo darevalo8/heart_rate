@@ -1,67 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:heart_rate/modules/history/page/history_page.dart';
-import 'package:heart_rate/modules/home/pages/base_home.dart';
-import 'package:heart_rate/modules/user/pages/profile_page.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heart_rate/modules/anomalies/blocs/anomaly_cubit.dart';
+import 'package:heart_rate/modules/anomalies/blocs/anomalydetail_cubit.dart';
+import 'package:heart_rate/modules/anomalies/blocs/historydetail_cubit.dart';
+import 'package:heart_rate/modules/home/blocs/home_cubit.dart';
+import 'package:heart_rate/modules/home/blocs/navbar_cubit.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+import 'package:heart_rate/modules/home/pages/nav_bar_page.dart';
+import 'package:heart_rate/modules/user/blocs/user_cubit.dart';
 
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+class RunHome extends StatelessWidget {
+  const RunHome({Key? key}) : super(key: key);
 
-class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-  static const List<Widget> _widgetOptions = [
-    BaseHome(),
-    HistoryPage(),
-    ProfilePage()
-  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: Colors.black,
-      bottomNavigationBar: BottomNavyBar(
-        selectedIndex: _currentIndex,
-        showElevation: true,
-        itemCornerRadius: 24,
-        curve: Curves.easeIn,
-        onItemSelected: (index) => setState(() => _currentIndex = index),
-        items: <BottomNavyBarItem>[
-          BottomNavyBarItem(
-            icon: Icon(Icons.home,),
-            title: Text('Home'),
-            activeColor: Colors.blueAccent,
-            inactiveColor: Colors.grey,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(Icons.history),
-            title: Text('Alertas'),
-            activeColor: Colors.blueAccent,
-            inactiveColor: Colors.grey,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(Icons.people),
-            title: Text(
-              'Perfil',
-            ),
-            activeColor: Colors.blueAccent,
-            textAlign: TextAlign.center,
-            inactiveColor: Colors.grey,
-          ),
-          // BottomNavyBarItem(
-          //   icon: Icon(Icons.settings),
-          //   title: Text('Settings'),
-          //   activeColor: Colors.blue,
-          //   textAlign: TextAlign.center,
-          // ),
-        ],
-      ),
-      body: _widgetOptions[_currentIndex],
-      
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NavbarCubit>(create: (context) => NavbarCubit()),
+        BlocProvider<HomeCubit>(create: (context) => HomeCubit(context.read(), context.read())),
+        BlocProvider<UserCubit>(create: (context)=> UserCubit(context.read())),
+        BlocProvider<AnomalyCubit>(create: (context)=> AnomalyCubit(context.read())),
+        BlocProvider<HistorydetailCubit>(create: (context)=> HistorydetailCubit(context.read())),
+        BlocProvider<AnomalydetailCubit>(create: (context)=> AnomalydetailCubit(context.read())),
+
+        
+        // BlocProvider(create: (context) => MenuCubit(context.read())..init()),
+
+      ],
+      child: NavBarPage(),
     );
   }
 }

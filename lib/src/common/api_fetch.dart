@@ -99,7 +99,7 @@ class ApiResponse<T> {
   }
 }
 
-enum Status { LOADING, COMPLETED, ERROR, INITIAL }
+enum Status { LOADING, COMPLETED, ERROR, INITIAL, NOTIFICATION, SUCCES }
 
 
 String errorsMapping(dynamic str) {
